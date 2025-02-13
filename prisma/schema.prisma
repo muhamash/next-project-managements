@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  password String
+  role     Role     @default(USER)
+  tasks    Task[]
+  tokens   Token[]
+}
+
+model Task {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  status      String         @default("pending")
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?      // Soft delete field
+  activities  TaskActivity[] // Relation to TaskActivity
+}
+
+model Token {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique 
+  userId      Int  
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+}
+
+model TaskActivity {
+  id          Int      @id @default(autoincrement())
+  taskId      Int
+  action      String   
+  details     String?  // Additional details (e.g., field changes)
+  performedBy Int      // User ID who performed the action
+  performedAt DateTime @default(now())
+
+  // Relationship to Task
+  task        Task     @relation(fields: [taskId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
