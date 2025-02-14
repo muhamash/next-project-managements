@@ -2,16 +2,27 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { logoutAction } from '../utils/actions/login';
 
-export default function TopBar() {
+export default function TopBar({session}) {
     const [ isMenuOpen, setIsMenuOpen ] = useState( false );
     const pathName = usePathname();
+    const [ isPending, startTransition ] = useTransition();
     // console.log( pathName );
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    const handleSignOut = () =>
+    {
+        startTransition( async () =>
+        {
+            await logoutAction();
+            router.push( "/login" );
+        })
+    }
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-gray-800 p-4 shadow-md">
@@ -95,7 +106,7 @@ export default function TopBar() {
                 }
 
                 {
-                    pathName !== '/login' && (
+                    pathName !== '/login' && !session?.user && (
                         <Link href="/login" className='px-4 py-2 bg-rose-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
                             Login
                         </Link>
@@ -103,10 +114,28 @@ export default function TopBar() {
                 }
 
                 {
-                    pathName !== '/registration' && (
+                    pathName !== '/registration' && !session?.user && (
                         <Link href="/registration" className='px-4 py-2 bg-cyan-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
                             Registration
                         </Link>
+                    )
+                }
+
+                {
+                    session?.user && pathName !== '/task' && (
+                        <Link href="/tasks" className='px-4 py-2 bg-sky-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                            Tasks
+                        </Link>
+                    )
+                }
+
+                {
+                    session?.user  && (
+                        <button onClick={handleSignOut} className='px-4 py-2 bg-teal-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                            {
+                                isPending ? "...logging out" : "Logout"
+                            }
+                        </button>
                     )
                 }
             </div>

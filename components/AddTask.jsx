@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 'use client'
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Bounce, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function AddTask({ onClose, task, categoryKey }) {
+export default function AddTask({ task, categoryKey }) {
     const [ formData, setFormData ] = useState( task ? {
         title: task.title,
         description: task.description,
@@ -17,8 +18,13 @@ export default function AddTask({ onClose, task, categoryKey }) {
         date: '',
         category: '',
     } );
-    
+    const router = useRouter();
     // console.log( "categoryKey in TaskCard:", categoryKey );
+    
+    const onClose = () =>
+    {
+        router.back();
+    }
     
     const handleChange = ( e ) =>
     {

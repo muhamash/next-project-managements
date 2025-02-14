@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "../../auth";
+import { signIn, signOut } from "../../auth";
 
 export const credentialsLogin = async (email, password) => {
   try {
@@ -39,3 +39,8 @@ export const loginAction = async (prevState, formData) => {
     return { success: false, error: "An unexpected error occurred" };
   }
 };
+
+export const logoutAction = async () =>
+{
+  await signOut();
+}

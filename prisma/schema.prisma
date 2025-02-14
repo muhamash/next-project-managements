@@ -59,6 +59,7 @@ model Task {
 model Token {
   id          Int      @id @default(autoincrement())
   token       String   @unique 
+  refreshToken String?  @unique
   userId      Int  
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
@@ -68,6 +69,7 @@ model Token {
 model Session {
   id           Int      @id @default(autoincrement())
   sessionToken String   @unique
+  // refreshToken String?  @unique
   userId       Int
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])

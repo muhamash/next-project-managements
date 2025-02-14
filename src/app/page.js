@@ -1,10 +1,11 @@
-export default async function HomePage() {
-  return (
-    <div className="py-[80px]">
-      task home
-      {/* <button>
 
-      </button> */}
-    </div>
-  )
+import { auth } from '../../auth';
+import LandingPage from '../../components/LandingPage';
+
+export default async function HomePage() {
+  const session = await auth();
+  const user = session?.user;
+
+  // console.log( session );
+  return <LandingPage user={user} />
 }
