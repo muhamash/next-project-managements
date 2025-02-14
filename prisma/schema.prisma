@@ -8,13 +8,16 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String
-  email    String   @unique
-  password String
-  role     Role     @default(USER)
-  tasks    Task[]
-  tokens   Token[]
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  password      String
+  role          Role      @default(USER)
+  image         String?
+  tasks         Task[]
+  sessions      Session[]
+  tokens        Token[]
 }
 
 model Task {
@@ -39,6 +42,13 @@ model Token {
   expiresAt   DateTime
 }
 
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+}
 model TaskActivity {
   id          Int      @id @default(autoincrement())
   taskId      Int

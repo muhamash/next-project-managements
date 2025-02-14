@@ -1,7 +1,10 @@
-export default async function page() {
+export default async function HomePage() {
   return (
-    <div>
+    <div className="py-[80px]">
       task home
+      {/* <button>
+
+      </button> */}
     </div>
   )
 }
