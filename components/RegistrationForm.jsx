@@ -1,21 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { useFormStatus } from "react-dom";
-import { loginAction } from "../utils/actions/login";
+import { registerUser } from "../utils/actions/registration";
 
 export default function RegisterForm() {
-    const [state, formAction] = React.useActionState(loginAction, { error: null, success: false });
+    const [state, formAction] = React.useActionState(registerUser, { error: null, success: false });
     const { pending } = useFormStatus();
+    const router = useRouter();
 
-    if ( state?.error )
+    // if ( state?.error )
+    // {
+    //     console.log( state.error );
+    // }
+
+    useEffect( () =>
     {
-        alert( state.error );
-    }
+        if ( state?.success )
+        {
+            router.push( '/login' );
+        }
+    }, [ router, state?.success ] );
 
     return (
-        <form action={formAction} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+        <form action={formAction} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md text-rose-600">
             <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
@@ -75,6 +85,11 @@ export default function RegisterForm() {
             <div className="text-center mt-4">
                 <Link href="/login" className="text-blue-500 hover:underline">Already have an account? Login</Link>
             </div>
+            {
+                state?.error && (
+                    <p className="py-3 my-3 rounded-md shadow-md shadow-black font-mono text-slate-100 text-sm text-center bg-rose-500">{  state?.error }</p>
+                )
+            }
         </form>
     );
 }

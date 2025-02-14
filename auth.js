@@ -1,12 +1,10 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { v4 as uuidv4 } from "uuid";
 import { authConfig } from "./auth.config";
-
-const prisma = new PrismaClient();
+import { prisma } from "./services/prisma";
 
 async function refreshAccessToken(token) {
   try {
@@ -35,6 +33,7 @@ export const {
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
   ...authConfig,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Credentials",
