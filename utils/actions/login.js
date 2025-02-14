@@ -10,9 +10,9 @@ export const credentialsLogin = async (email, password) => {
       redirect: false,
     });
 
-    if (result?.error) {
-      throw new Error(result.error);
-    }
+    // if (result?.error) {
+    //   throw new Error(result.error);
+    // }
 
     return { success: true };
   } catch (error) {

@@ -1,4 +1,4 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcryptjs from "bcryptjs";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -30,58 +30,65 @@ export const {
   signIn,
   signOut,
   handlers,
-} = NextAuth({
-  adapter: PrismaAdapter(prisma),
+} = NextAuth( {
+  adapter: PrismaAdapter( prisma ),
   ...authConfig,
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
+    CredentialsProvider( {
+      // name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize ( credentials )
+      {
         const { email, password } = credentials || {};
 
-        if (!email || !password) {
-          throw new Error("All fields are required");
+        // console.log( email, password );
+        if ( !email || !password )
+        {
+          throw new Error( "All fields are required" );
         }
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique( {
           where: { email },
-        });
+        } );
 
-        if (!user || !(await bcryptjs.compare(password, user.password))) {
-          throw new Error("Invalid email or password");
+        // console.log( user );
+        if ( !user || !( await bcryptjs.compare( password, user.password ) ) )
+        {
+          throw new Error( "Invalid email or password" );
         }
 
         // Generate new session and refresh tokens
         const newSessionToken = uuidv4();
-        const newRefreshToken = `${uuidv4()}-${new Date().toISOString()}`;
+        // const newRefreshToken = `${uuidv4()}-${new Date().toISOString()}`;
         const expiresIn = 60 * 1000; // 1 minute
-        const newExpires = new Date(Date.now() + expiresIn);
+        const newExpires = new Date( Date.now() + expiresIn );
 
         // Create or update session in the database
-        let session = await prisma.token.findFirst({
+        let session = await prisma.token.findFirst( {
           where: { userId: user.id },
-        });
+        } );
 
-        if (session) {
+        if ( session )
+        {
           session.token = newSessionToken;
           session.expiresAt = newExpires;
-          await prisma.token.update({
+          await prisma.token.update( {
             where: { id: session.id },
             data: { token: newSessionToken, expiresAt: newExpires },
-          });
-        } else {
-          await prisma.token.create({
+          } );
+        } else
+        {
+          await prisma.token.create( {
             data: {
               token: newSessionToken,
               userId: user.id,
               expiresAt: newExpires,
             },
-          });
+          } );
         }
 
         return {
@@ -90,39 +97,40 @@ export const {
           email: user.email,
           role: user.role,
           accessToken: newSessionToken,
-          refreshToken: newRefreshToken,
+          // refreshToken: newRefreshToken,
           accessTokenExpires: newExpires.getTime(),
         };
       },
-    }),
+    } ),
   ],
-  pages: {
-    signIn: "/",
-    signOut: "/login",
-  },
-  events: {
-    async signIn({ user, account }) {
-      const existingUser = await prisma.user.findUnique({
-        where: { email: user.email },
-      });
+  // events: {
+  //   async signIn ( { user, account } )
+  //   {
+  //     const existingUser = await prisma.user.findUnique( {
+  //       where: { email: user.email },
+  //     } );
 
-      if (!existingUser) {
-        await prisma.user.create({
-          data: {
-            name: user.name,
-            email: user.email,
-            role: "USER", 
-            image: user.image,
-          },
-        });
-      }
-    },
-  },
+  //     if ( !existingUser )
+  //     {
+  //       await prisma.user.create( {
+  //         data: {
+  //           name: user.name,
+  //           email: user.email,
+  //           role: "USER",
+  //           image: user.image,
+  //         },
+  //       } );
+  //     }
+  //   },
+  // },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt ( { token, user, account } )
+    {
       // Initial sign-in
-      if (account && user) {
-        if (account.provider === "credentials") {
+      if ( account && user )
+      {
+        if ( account.provider === "credentials" )
+        {
           return {
             ...token,
             accessToken: user.accessToken,
@@ -139,14 +147,16 @@ export const {
       }
 
       // Refresh token if expired
-      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires) {
-        return refreshAccessToken(token);
+      if ( token.accessTokenExpires && Date.now() > token.accessTokenExpires )
+      {
+        return refreshAccessToken( token );
       }
 
       return token;
     },
 
-    async session({ session, token }) {
+    async session ( { session, token } )
+    {
       session.user = token.user;
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
@@ -155,4 +165,4 @@ export const {
       return session;
     },
   },
-});
+} );
