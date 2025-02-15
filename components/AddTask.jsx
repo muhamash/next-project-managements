@@ -3,7 +3,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
-import { Bounce, toast } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { handleTask } from "../utils/actions/tasks";
 
@@ -86,8 +86,6 @@ export default function AddTask() {
                 theme: "light",
                 transition: Bounce,
             } );
-
-            router.back();
         }
     };
 
@@ -100,7 +98,8 @@ export default function AddTask() {
                 <form action={handleSubmit}>
                     {/* <input type="hidden" name="userId" value={ userId } /> */}
                     {/* <input type="edit" name="edit" value={ edit } /> */}
-                    {/* <input type="hidden" name="taskId" value={taskId} /> */}
+                    {/* <input type="hidden" name="taskId" value={taskId} /> */ }
+                    <ToastContainer />
                     <div className="mb-4">
                         <label htmlFor="title" className="mb-1 block text-sm font-medium text-gray-300">
                             Task Name
