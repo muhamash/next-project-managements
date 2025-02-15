@@ -65,7 +65,7 @@ export async function GET(request) {
 // POST Route to create a task
 export async function POST(request) {
   try {
-    const { title, description, status, userId } = await request.json();
+    const { title, description, status, userId, date } = await request.json();
 
     // Validate and sanitize inputs
     if (!title || !validator.isLength(title, { min: 1, max: 100 })) {
@@ -82,7 +82,7 @@ export async function POST(request) {
       );
     }
 
-    if (!status || !validator.isAlpha(status.replace(/_/g, ""))) {
+    if (!status || !/^[a-zA-Z\s-]+$/.test(status)) {
       return NextResponse.json(
         { success: false, message: "Valid status is required" },
         { status: 400 }
@@ -100,7 +100,8 @@ export async function POST(request) {
     const sanitizedTitle = validator.escape(title);
     const sanitizedDescription = validator.escape(description);
     const sanitizedStatus = validator.escape(status);
-    const sanitizedUserId = parseInt(validator.escape(userId.toString()));
+    const sanitizedUserId = parseInt( validator.escape( userId.toString() ) );
+    const createdAt = new Date(date).toISOString();
 
     // Create a new task and connect it to an existing user
     const newTask = await prisma.task.create({
@@ -108,6 +109,7 @@ export async function POST(request) {
         title: sanitizedTitle,
         description: sanitizedDescription,
         status: sanitizedStatus,
+        createdAt: createdAt,
         user: {
           connect: { id: sanitizedUserId },
         },
@@ -118,7 +120,8 @@ export async function POST(request) {
       data: {
         taskId: newTask.id,
         action: "created",
-        // performedBy: userId, 
+        performedBy: sanitizedUserId, 
+        performedAt: createdAt,
       },
     } );
 

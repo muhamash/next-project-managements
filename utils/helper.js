@@ -4,6 +4,6 @@ export const ROOT = '/';
 
 export const PUBLIC_ROUTES = [
   LOGIN,
-  '/register',
+  '/registration',
   ROOT 
 ];

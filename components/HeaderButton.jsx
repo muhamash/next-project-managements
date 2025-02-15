@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 
-export default function HeaderButton() {
+export default function HeaderButton({session}) {
     const router = useRouter();
 
     const handleButton = () => {
         console.log("Button clicked");
-        router.push('/tasks/addTask'); 
+        router.push(`/tasks/addTask?userId=${session?.user?.id}`); 
     };
 
     return (

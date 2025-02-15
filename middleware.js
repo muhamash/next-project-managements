@@ -1,30 +1,51 @@
 import NextAuth from "next-auth";
+import { NextResponse } from "next/server";
 import { authConfig } from "./auth.config";
-import { LOGIN, PUBLIC_ROUTES, ROOT } from "./utils/helper";
+import { DASHBOARD, LOGIN, PUBLIC_ROUTES } from "./utils/helper";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth( ( req ) =>
-{
+export default auth(async function middleware(req) {
   const { nextUrl } = req;
-  const isAuthenticated = !!req.auth;
+  console.log( req );
   
-  const pathname = nextUrl.pathname;
-  const isPublicRoute = PUBLIC_ROUTES.includes( pathname );
+  const isAuthenticated = req.auth?.user !== undefined;
+  
+  // Normalize path handling
+  const cleanPath = (path) => path.replace(/\/$/, "") || "/";
+  const currentPath = cleanPath(nextUrl.pathname);
+  
+  const isPublicRoute = PUBLIC_ROUTES.some(route => 
+    currentPath === cleanPath(route)
+  );
 
-  // Redirect authenticated users from public routes to dashboard
-  if ( isAuthenticated && isPublicRoute )
-  {
-    return Response.redirect( new URL( ROOT, nextUrl ) );
+  console.log(`Auth Check:`, {
+    path: currentPath,
+    isAuthenticated,
+    isPublicRoute,
+    session: req.auth
+  });
+
+  // Handle authenticated users
+  if (isAuthenticated) {
+    if (isPublicRoute && currentPath !== cleanPath(DASHBOARD)) {
+      console.log(`Redirecting authenticated user from public route to dashboard`);
+      return NextResponse.redirect(new URL(DASHBOARD, nextUrl));
+    }
+    return NextResponse.next();
   }
 
-  // Redirect unauthenticated users from private routes to login
-  if ( !isAuthenticated && !isPublicRoute )
-  {
-    return Response.redirect( new URL( LOGIN, nextUrl ) );
+  // Handle unauthenticated users
+  if (!isPublicRoute) {
+    console.log(`Redirecting unauthenticated user to login`);
+    const redirectUrl = new URL(LOGIN, nextUrl);
+    redirectUrl.searchParams.set("from", currentPath);
+    return NextResponse.redirect(redirectUrl);
   }
-} );
+
+  return NextResponse.next();
+});
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/api/(.*)"],
 };

@@ -4,11 +4,11 @@ import Header from "../../../components/Header";
 export default async function ParentPage ()
 {
   const session = await auth();
-  console.log( session );
+  // console.log( session );
   
   return (
     <div className="w-full">
-      <Header/>
+      <Header session={ session } />
     </div>
   );
 }

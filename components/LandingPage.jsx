@@ -42,7 +42,7 @@ export default function LandingPage({ user }) {
 
     const handleStart = () =>
     {
-        router.push('/tasks/addTask');
+        router.push(`/tasks/addTask?userId=${user?.id}`); 
     };
 
     return (
