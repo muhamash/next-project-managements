@@ -9,36 +9,30 @@ export async function GET(request) {
   try {
     // Get the id and status from query parameters
     const url = new URL(request.url);
-    const id = url.searchParams.get("id");
+    const id = url.searchParams.get("userId");
     const status = url.searchParams.get("status");
 
     // Validate and sanitize inputs
-    if (!id || !validator.isNumeric(id)) {
+    if (!id || !validator.isInt(id, { min: 1 })) {
       return NextResponse.json(
-        { success: false, message: "Valid id is required" },
+        { success: false, message: "Valid user ID is required" },
         { status: 400 }
       );
     }
 
-    if (!status || !validator.isAlpha(status.replace(/_/g, ""))) {
+    if (!status || !["pending", "in_progress", "completed"].includes(status)) {
       return NextResponse.json(
         { success: false, message: "Valid status is required" },
         { status: 400 }
       );
     }
+    const userId = parseInt( id, 10 );
 
-    // Sanitize inputs
-    const sanitizedId = validator.escape(id);
-    const sanitizedStatus = validator.escape(status);
-
-    // Fetch tasks based on the id of the user and status
-    const userId = parseInt(sanitizedId);
+    // Fetch tasks for the given user and status
     const tasks = await prisma.task.findMany({
       where: {
-        user: {
-          userId: userId,
-        },
-        status: sanitizedStatus,
+        userId,
+        status,
         deletedAt: null,
       },
       include: {
@@ -46,7 +40,6 @@ export async function GET(request) {
           select: {
             id: true,
             name: true,
-            userId: true
           },
         },
       },

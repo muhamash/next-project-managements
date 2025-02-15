@@ -32,3 +32,24 @@ export async function createTask(prevState, formData) {
         return { success: false, message: "Error creating task" };
     }
 }
+
+export async function fetchTasks(userId, status) {
+    try {
+        const response = await fetch( `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks?userId=${userId}&status=${status}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        } );
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to fetch tasks");
+        }
+
+        return data;
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        return [];
+    }
+}

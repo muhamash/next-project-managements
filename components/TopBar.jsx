@@ -123,7 +123,7 @@ export default function TopBar({session}) {
 
                 {
                     session?.user && pathName !== '/task' && (
-                        <Link href="/tasks" className='px-4 py-2 bg-sky-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                        <Link href={`/tasks?userId=${session?.user?.id}`} className='px-4 py-2 bg-sky-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
                             Tasks
                         </Link>
                     )
