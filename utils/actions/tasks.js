@@ -1,6 +1,5 @@
 "use server"
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { auth } from '../../auth';
 
 export async function handleTask ( prevState, formData )
@@ -105,3 +104,17 @@ export async function deleteTask ( prevState, formData )
         return [];
     }
 }
+
+export const fetchTaskStatusPercentage = async (userId) => {
+    try
+    {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/user-tasks-states?userId=${userId}`);
+        const data = await response.json();
+
+        return data;
+    } catch ( error )
+    {
+        console.log( error || error?.message );
+        return [];
+    }
+};

@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FaCalendarAlt, FaCheckCircle, FaTasks } from 'react-icons/fa'
 import { SiProgress } from 'react-icons/si'
+import ProductivityBreakdown from './ProductivityBreakDown'
+import UserCard from './UserCard'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,13 +33,13 @@ const statVariants = {
   tap: { scale: 0.95 }
 }
 
-export default function LandingPage({ user }) {
+export default function LandingPage({ user, userState }) {
     const router = useRouter();
     const overallStats = [
-        { icon: <FaTasks className="w-6 h-6" />, label: 'Total Tasks', value: '24' },
-        { icon: <FaCheckCircle className="w-6 h-6" />, label: 'Completed', value: '15' },
-        { icon: <SiProgress className="w-6 h-6" />, label: 'In Progress', value: '6' },
-        { icon: <FaCalendarAlt className="w-6 h-6" />, label: 'Pending', value: '3' }
+        { icon: <FaTasks className="w-6 h-6" />, label: 'Total Tasks', value: userState?.totalTask },
+        { icon: <FaCheckCircle className="w-6 h-6" />, label: 'Completed', value: userState?.totalCompleted },
+        { icon: <SiProgress className="w-6 h-6" />, label: 'In Progress', value: userState?.totalInProgress },
+        { icon: <FaCalendarAlt className="w-6 h-6" />, label: 'Pending', value: userState?.totalPending }
     ];
 
     const handleStart = () =>
@@ -45,6 +47,8 @@ export default function LandingPage({ user }) {
         console.log( user?.id );
         router.push(`/tasks/addTask?userId=${user?.id}`); 
     };
+
+    console.log( user );
 
     return (
         <motion.div
@@ -142,72 +146,12 @@ export default function LandingPage({ user }) {
                             className="grid grid-cols-1 lg:grid-cols-2 gap-8"
                         >
                             {/* User Card */ }
-                            <motion.div
-                                className="bg-slate-700 p-6 rounded-xl shadow-sm"
-                                whileHover={ { scale: 1.01 } }
-                            >
-                                <div className="flex items-center gap-4 mb-6">
-                                    {/* <Avatar className="w-16 h-16">
-                                <AvatarImage src={ user?.image } />
-                                <AvatarFallback>{ user?.name?.[ 0 ] }</AvatarFallback>
-                            </Avatar> */}
-                                    <div>
-                                        <h3 className="text-xl font-semibold text-slate-800">{ user?.name }</h3>
-                                        <p className="text-white">{ user?.email }</p>
-                                        <span className="text-sm px-3 py-1 bg-blue-100 text-blue-600 rounded-full">
-                                            { user?.role }
-                                        </span>
-                                    </div>
-                                </div>
-                                {/* <div className="space-y-2">
-                            <p className="text-sm text-slate-100">
-                                <span className="font-medium">Member since:</span> Jan 2024
-                            </p>
-                            <p className="text-sm text-slate-100">
-                                <span className="font-medium">Last active:</span> 2 hours ago
-                            </p>
-                        </div> */}
-                            </motion.div>
+                            <UserCard user={user}/>
 
                             {/* Progress Visualization */ }
-                            <motion.div
-                                className="bg-slate-700 p-6 rounded-xl shadow-sm"
-                                whileHover={ { scale: 1.01 } }
-                            >
-                                <h3 className="text-lg font-semibold text-white mb-4">
-                                    Productivity Breakdown
-                                </h3>
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-sm text-slate-200">Task Completion</span>
-                                        <span className="text-sm font-medium text-sky-600">62%</span>
-                                    </div>
-                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={ { width: 0 } }
-                                            animate={ { width: '62%' } }
-                                            transition={ { duration: 1 } }
-                                            className="h-full bg-sky-600 rounded-full"
-                                        />
-                                    </div>
-              
-                                    <div className="flex items-center justify-between mt-4">
-                                        <span className="text-sm text-slate-200">On-time Delivery</span>
-                                        <span className="text-sm font-medium text-green-600">85%</span>
-                                    </div>
-                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={ { width: 0 } }
-                                            animate={ { width: '85%' } }
-                                            transition={ { duration: 1 } }
-                                            className="h-full bg-green-600 rounded-full"
-                                        />
-                                    </div>
-                                </div>
-                            </motion.div>
+                                <ProductivityBreakdown taskCompletion={ userState?.percentages?.completed } pendingTasks={ userState?.percentages?.pending } inprogress={ userState?.percentages?.inProgress} />
                         </motion.div>
 
-                        {/* CTA Section */ }
                         <motion.div
                             variants={ itemVariants }
                             className="mt-12 text-center"
