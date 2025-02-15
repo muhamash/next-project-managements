@@ -13,9 +13,9 @@ export default function LoginForm() {
 
     useEffect(() => {
         if (state?.success) {
-            router.push("/tasks");
+            window.location.href = "/";
         }
-    }, [router, state?.success]);
+    }, [state?.success]);
 
     return (
         <form action={formAction} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md text-violet-600">

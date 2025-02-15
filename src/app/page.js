@@ -6,6 +6,6 @@ export default async function HomePage() {
   const session = await auth();
   const user = session?.user;
 
-  // console.log( session );
+  // console.log( user );
   return <LandingPage user={user} />
 }

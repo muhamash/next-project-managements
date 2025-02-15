@@ -20,9 +20,10 @@ export default function TopBar({session}) {
         startTransition( async () =>
         {
             await logoutAction();
-            router.push( "/login" );
+            router.push( "/" );
         })
     }
+    // console.log( session?.user );
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-gray-800 p-4 shadow-md">
@@ -105,37 +106,33 @@ export default function TopBar({session}) {
                     )
                 }
 
-                {
-                    pathName !== '/login' && !session?.user && (
-                        <Link href="/login" className='px-4 py-2 bg-rose-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
-                            Login
-                        </Link>
-                    )
-                }
 
                 {
-                    pathName !== '/registration' && !session?.user && (
-                        <Link href="/registration" className='px-4 py-2 bg-cyan-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
-                            Registration
-                        </Link>
-                    )
-                }
-
-                {
-                    session?.user && pathName !== '/task' && (
-                        <Link href={`/tasks?userId=${session?.user?.id}`} className='px-4 py-2 bg-sky-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
-                            Tasks
-                        </Link>
-                    )
-                }
-
-                {
-                    session?.user  && (
-                        <button onClick={handleSignOut} className='px-4 py-2 bg-teal-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                    session?.user ? (
+                        <div className='flex gap-3'>
+                            <button onClick={ handleSignOut } className='px-4 py-2 bg-teal-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                                {
+                                    isPending ? "...logging out" : "Logout"
+                                }
+                            </button>
                             {
-                                isPending ? "...logging out" : "Logout"
+                                session?.user && pathName !== '/task' && (
+                                    <Link href={ `/tasks?userId=${session?.user?.id}` } className='px-4 py-2 bg-sky-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                                        Tasks
+                                    </Link>
+                                )
                             }
-                        </button>
+                        </div>
+                    ) : (
+                        <div className='flex gap-3'>
+                            <Link href="/registration" className='px-4 py-2 bg-cyan-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                                Registration
+                            </Link>
+                                
+                            <Link href="/login" className='px-4 py-2 bg-rose-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
+                                Login
+                            </Link>
+                        </div>
                     )
                 }
             </div>

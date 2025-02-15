@@ -22,7 +22,7 @@ export default function AddTask({ task }) {
     } );
     
     const [ state, formAction ] = React.useActionState( createTask, { error: null, success: false } );
-
+    // console.log( state );
     const getSearchParams = useSearchParams();
     const userId = getSearchParams.get( "userId" );
 
@@ -46,7 +46,8 @@ export default function AddTask({ task }) {
         formDataToSubmit.append( "category", formData.category );
         formDataToSubmit.append( "userId",  userId);
 
-        await formAction( formDataToSubmit );
+        const createdTask = await formAction( formDataToSubmit );
+        router.push( `/tasks?userId=${userId}` );
 
         if ( !state.error )
         {

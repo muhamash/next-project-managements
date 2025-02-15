@@ -3,11 +3,10 @@
  /* eslint-disable react/prop-types */
 import DeleteIcon from './DeleteIcon';
 
-
-export default function TaskCard ( { task, status } )
+export default function TaskCard ( { task, status, userId } )
 {
 
-    // console.log("status in TaskCard:", status);
+    // console.log(task);
 
     const colorFunction = ( id ) =>
     {
@@ -21,15 +20,14 @@ export default function TaskCard ( { task, status } )
     };
 
     return (
-        
         <div className="mb-4 rounded-lg bg-gray-800 p-4 mt-3">
             <div className="flex justify-between">
                 <h4 className={ `mb-2 font-semibold ${colorFunction( status )}` }>
-                    { task.title || "default title" }
+                    { task?.title || "default title" }
                 </h4>
                 <div className="flex gap-2">
                     {/* delete */ }
-                    <DeleteIcon id={ task.id } />
+                    <DeleteIcon id={ task?.id } status={ task?.status } />
                     {/* edit */ }
                     <svg
                             
@@ -49,13 +47,12 @@ export default function TaskCard ( { task, status } )
                 </div>
             </div>
             <p className="mb-2 text-sm text-zinc-200">
-                { task.description || "default textdfg" }
+                { task?.description || "default textdfg" }
             </p>
 
             <p className="mt-6 text-xs text-zinc-400">
                 { new Date( task.updatedAt ).toLocaleDateString( 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' } ) }
             </p>
         </div>
-    
     );
 }

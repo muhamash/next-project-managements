@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import validator from "validator";
 
 const prisma = new PrismaClient();
+export const dynamic = 'force-dynamic';
 
 // GET Route to fetch tasks per users
 export async function GET(request) {
@@ -132,12 +133,21 @@ export async function POST(request) {
 export async function DELETE(request) {
   try {
     const url = new URL(request.url);
-    const taskId = url.searchParams.get("taskId");
+    const taskId = url.searchParams.get( "taskId" );
+    const userId = url.searchParams.get("userId");
 
     // Validate taskId
+    // console.log( userId, taskId );
     if (!taskId || !validator.isNumeric(taskId)) {
       return NextResponse.json(
         { success: false, message: "Valid taskId is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!userId || !validator.isNumeric(userId)) {
+      return NextResponse.json(
+        { success: false, message: "Valid userId is required" },
         { status: 400 }
       );
     }
@@ -157,7 +167,7 @@ export async function DELETE(request) {
       data: {
         taskId: deletedTask.id,
         action: "deleted",
-        // performedBy: 1, 
+        performedBy: parseInt(userId), 
       },
     });
 

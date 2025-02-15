@@ -42,6 +42,7 @@ export default function LandingPage({ user }) {
 
     const handleStart = () =>
     {
+        console.log( user?.id );
         router.push(`/tasks/addTask?userId=${user?.id}`); 
     };
 
@@ -50,7 +51,7 @@ export default function LandingPage({ user }) {
             initial="hidden"
             animate="visible"
             variants={ containerVariants }
-            className="min-h-screen p-8 bg-gradient-to-br from-grey-500 to-blue-50"
+            className="min-h-screen p-8 bg-gradient-to-br from-grey-500 to-blue-50 pt-[100]"
         >
             {
                 !user ? (
@@ -92,7 +93,7 @@ export default function LandingPage({ user }) {
                         {/* Header Section */ }
                         <motion.div variants={ itemVariants } className="mb-12 text-center">
                             <motion.h1
-                                className="text-4xl font-bold text-slate-800 mb-4"
+                                className="text-4xl font-bold text-white mb-4"
                                 initial={ { opacity: 0, y: 20 } }
                                 animate={ { opacity: 1, y: 0 } }
                                 transition={ { delay: 0.2 } }
