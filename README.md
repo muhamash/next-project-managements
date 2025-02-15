@@ -144,7 +144,7 @@ Clone the repository:
 
 bash
 Copy
-git clone https://github.com/yourusername/task-management-system.git
+git clone [https://github.com/yourusername/task-management-system.git](https://github.com/muhamash/next-project-managements)
 cd task-management-system
 Install dependencies for the frontend and backend:
 
