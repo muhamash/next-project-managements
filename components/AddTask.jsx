@@ -67,7 +67,10 @@ export default function AddTask() {
         }
         finally
         {
-            window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}`;
+            setTimeout( () =>
+            {
+                window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}`;
+            }, 500 );
         }
 
         if ( !state.error )
