@@ -21,7 +21,7 @@ export async function GET(request) {
     const sanitizedUserId = parseInt(userId, 10);
 
     // Fetch user details
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique( {
       where: { id: sanitizedUserId },
       select: {
         id: true,
@@ -38,7 +38,7 @@ export async function GET(request) {
           },
         },
       },
-    });
+    } );
 
     if (!user) {
       return NextResponse.json(
@@ -47,7 +47,7 @@ export async function GET(request) {
       );
     }
 
-    const taskActivities = await prisma.taskActivity.findMany({
+    const taskActivities = await prisma.taskActivity.findMany( {
       where: { performedBy: user.id },
       select: {
         action: true,
@@ -56,32 +56,39 @@ export async function GET(request) {
         details: true,
         performedBy: true,
         task: {
-          select: {
-            title: true,
-            status: true,
-          },
-        },
+            select: {
+              title: true,
+              status: true
+            }
+          }
       },
-    });
+    } );
 
     // Count actions by type and gather task details for "status-changed" actions
-    const activitySummary = taskActivities.reduce(
-      (acc, activity) => {
-        if (activity.action === "created") acc.created += 1;
-        if (activity.action === "edited") acc.edited += 1;
-        if (activity.action === "status-changed") {
-          acc.statusChanged += 1;
-          acc.statusChangedTasks.push({
-            taskId: activity.taskId,
-            taskTitle: activity.task.title,
-            actionTime: activity.performedAt,
-          });
-        }
-        if (activity.action === "deleted") acc.deleted += 1;
-        return acc;
+    const activitySummary = {
+      counts: {
+        created: 0,
+        edited: 0,
+        statusChanged: 0,
+        deleted: 0
       },
-      { created: 0, edited: 0, statusChanged: 0, deleted: 0, statusChangedTasks: [] }
-    );
+      recentActivities: []
+    };
+
+    taskActivities.forEach( activity =>
+    {
+      if ( activity?.action in activitySummary?.counts )
+      {
+        activitySummary.counts[ activity?.action ]++;
+      }
+  
+      activitySummary.recentActivities.push( {
+        action: activity?.action,
+        taskTitle: activity?.task?.title,
+        timestamp: activity?.performedAt,
+        details: activity?.details
+      } );
+    } );
 
     // Last login time (from the latest session)
     const lastLogin = user.sessions.length > 0 ? user.sessions[0].createdAt : null;

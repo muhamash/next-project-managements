@@ -41,9 +41,9 @@ export default function UserCard ( { user, getUser } )
                     <p className="text-sm text-slate-100">
                         <span className="font-medium">Member since: { new Date( info?.userDetails?.createdAt ).toLocaleDateString( 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' } ) }</span>
                     </p>
-                    <p className="text-sm text-slate-100">
+                    {/* <p className="text-sm text-slate-100">
                         <span className="font-medium">Last active:</span> { info?.userDetails?.lastLogin }
-                    </p>
+                    </p> */}
                 </div>
             </div>
 
@@ -61,7 +61,7 @@ export default function UserCard ( { user, getUser } )
                         whileHover={ { scale: 1.05 } }
                     >
                         <span className="text-sm text-slate-200">Created</span>
-                        <span className="text-sm font-medium text-sky-600">{ info?.taskActivitySummary?.created }</span>
+                        <span className="text-sm font-medium text-sky-600">{ info?.taskActivitySummary?.counts?.created }</span>
                     </motion.div>
 
                     {/* Display deleted tasks count */ }
@@ -70,7 +70,7 @@ export default function UserCard ( { user, getUser } )
                         whileHover={ { scale: 1.05 } }
                     >
                         <span className="text-sm text-slate-200">Deleted</span>
-                        <span className="text-sm font-medium text-red-600">{ getUser?.deleted }</span>
+                        <span className="text-sm font-medium text-red-600">{ info?.taskActivitySummary?.counts?.deleted }</span>
                     </motion.div>
 
                     {/* Display edited tasks count */ }
@@ -79,34 +79,35 @@ export default function UserCard ( { user, getUser } )
                         whileHover={ { scale: 1.05 } }
                     >
                         <span className="text-sm text-slate-200">Edited</span>
-                        <span className="text-sm font-medium text-yellow-600">{ getUser?.edited }</span>
+                        <span className="text-sm font-medium text-yellow-600">{ info?.taskActivitySummary?.counts?.edited }</span>
                     </motion.div>
 
                     {/* Display status changed tasks */ }
-                    <motion.div
+                    {/* <motion.div
                         className="flex items-center justify-between"
                         whileHover={ { scale: 1.05 } }
                     >
                         <span className="text-sm text-slate-200">Status Changed</span>
                         <span className="text-sm font-medium text-orange-600">{ getUser?.statusChanged }</span>
-                    </motion.div>
+                    </motion.div> */}
 
                     {/* Display the status changed tasks list */ }
                     <motion.div
                         className="flex items-center justify-between"
                         whileHover={ { scale: 1.05 } }
                     >
-                        <span className="text-sm text-slate-200">Status Changed Tasks</span>
+                        <span className="text-sm text-slate-200">Recent Activities</span>
                         <span className="text-sm font-medium text-green-600">
-                            { getUser?.statusChangedTasks?.length > 0 ? getUser?.statusChangedTasks?.join( ", " ) : 'None' }
+                            { info?.taskActivitySummary?.recentActivities?.length }
                         </span>
                     </motion.div>
 
                     {/* Optional: Add progress bar or dynamic visual based on counts */ }
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden mt-6">
+                    <p className='text-[10px] font-mono text-orange-500'>Activity score</p>
+                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden mt-2">
                         <motion.div
                             initial={ { width: 0 } }
-                            animate={ { width: `${( getUser?.created / ( getUser?.created + getUser?.deleted + getUser?.edited + getUser?.statusChanged ) ) * 100}%` } }
+                            animate={ { width: `${( info?.taskActivitySummary?.counts?.created / ( info?.taskActivitySummary?.counts?.created + info?.taskActivitySummary?.counts?.deleted + info?.taskActivitySummary?.counts?.edited + info?.taskActivitySummary?.counts?.edited ) ) * 100}%` } }
                             transition={ { duration: 1 } }
                             className="h-full bg-sky-600 rounded-full"
                         />

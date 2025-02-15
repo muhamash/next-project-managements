@@ -1,8 +1,5 @@
 "use server";
 
-import { parse } from 'json2csv';
-import ExcelJS from 'exceljs';
-
 export async function getUserInfo (userId)
 {
     try {
@@ -26,16 +23,3 @@ export async function getUserInfo (userId)
         return [];
     }
 }
-
-export const generateExcel = async (data) => {
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('Report');
-  worksheet.columns = [
-    { header: 'Name', key: 'name' },
-    { header: 'Age', key: 'age' },
-  ];
-  worksheet.addRows(data);
-
-  const buffer = await workbook.xlsx.writeBuffer();
-  return buffer;
-};

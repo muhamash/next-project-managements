@@ -60,6 +60,7 @@ export default function AddTask() {
 
         try {
             await formAction( formDataToSubmit );
+            // router.back();
         }
         catch ( error )
         {
@@ -69,8 +70,11 @@ export default function AddTask() {
         {
             setTimeout( () =>
             {
+                // router.replace( `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}` );
                 window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}`;
+                
             }, 500 );
+            // router.refresh();
         }
 
         if ( !state.error )

@@ -169,7 +169,7 @@ export async function DELETE(request) {
         taskId: deletedTask.id,
         action: "deleted",
         performedBy: parseInt( userId ),
-        details: `Task deleted: ${task.title}`,
+        details: `Task deleted: ${deletedTask.title}`,
       },
     } );
 
@@ -253,14 +253,17 @@ export async function PATCH(request) {
       details += `Title changed from "${currentTask.title}" to "${title}".`;
     }
 
+    const date = new Date().toISOString();
+
     await prisma.taskActivity.create( {
       data: {
         taskId: updatedTask.id,
-        action: "updated",
-        details,
+        action: action,
+        details : JSON.stringify(details),
         oldStatus: currentTask.status,
         newStatus: status,
-        performedBy: parseInt(userId),
+        performedBy: parseInt( userId ),
+        performedAt: date
       },
     } );
 

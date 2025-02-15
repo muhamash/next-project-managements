@@ -83,8 +83,8 @@ model TaskActivity {
   id          Int      @id @default(autoincrement())
   taskId      Int
   action      String
-  oldStatus    String?  
-  newStatus    String?   
+  oldStatus   String?  
+  newStatus   String?   
   details     String?  // Additional details (e.g., field changes)
   performedBy Int      // User ID who performed the action
   performedAt DateTime @default(now())
