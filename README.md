@@ -1,37 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Task Management System
+Objective
+Develop a scalable and maintainable full-stack Task Management System with advanced features to test the candidate's ability to:
 
-## Getting Started
+Build a scalable and maintainable full-stack application.
 
-First, run the development server:
+Integrate multiple technologies seamlessly.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Optimize for performance, usability, and security.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Project Requirements
+Frontend (ReactJS)
+Core Features:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+User authentication (Login/Signup pages).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Dashboard to display a user's tasks with filtering (e.g., by status, due date).
 
-## Learn More
+Task creation, editing, and deletion forms with validation.
 
-To learn more about Next.js, take a look at the following resources:
+Responsive design compatible with mobile and desktop.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Add dark mode support.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+RESTful APIs for authentication and CRUD operations.
 
-## Deploy on Vercel
+Basic error handling and structured response format.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Enhancements:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# next-project-managements
+Integrate caching (e.g., Redis) to improve API response times.
+
+Implement unit and integration testing for critical APIs.
+
+Design APIs to handle bulk task updates (e.g., batch editing).
+
+Add a task activity log (track actions like creation, updates, and deletions).
+
+Backend (Node.js with Express)
+Core Features:
+
+RESTful APIs for authentication and CRUD operations.
+
+Basic error handling and structured response format.
+
+Enhancements:
+
+Integrate caching (e.g., Redis) to improve API response times.
+
+Implement unit and integration testing for critical APIs.
+
+Design APIs to handle bulk task updates (e.g., batch editing).
+
+Add a task activity log (track actions like creation, updates, and deletions).
+
+Database (MySQL)
+Core Structure:
+
+Tables: Users, Tasks, Roles, Task Activities.
+
+Relationships:
+
+Users ↔ Tasks: One-to-Many.
+
+Tasks ↔ Task Activities: One-to-Many.
+
+Users ↔ Roles: Many-to-Many.
+
+Enhancements:
+
+Add indexing for frequently queried columns (e.g., User_ID, Status).
+
+Use stored procedures for complex queries (e.g., generating task reports).
+
+Implement soft deletes using a Deleted_at column.
+
+Additional Features
+Performance Optimizations:
+Apply lazy loading for tasks on the frontend.
+
+Use database query optimization techniques (e.g., eager loading with Laravel or JOINs in SQL).
+
+Security Enhancements:
+Sanitize user inputs to prevent SQL injection.
+
+Implement HTTPS with CSRF tokens.
+
+Secure sensitive information using environment variables (e.g., API keys).
+
+Analytics and Reporting (Bonus):
+Generate a summary report of tasks (e.g., total tasks, completed, overdue).
+
+Evaluation Criteria
+Code Quality:
+
+Clean, modular, and DRY code.
+
+Well-commented and formatted.
+
+Functionality:
+
+Fulfillment of core and advanced features.
+
+Minimal bugs and glitches.
+
+UI/UX Design:
+
+Intuitive and visually appealing interface.
+
+Responsive across devices.
+
+Database Design:
+
+Efficient structure and normalization.
+
+Indexing and relationship management.
+
+Security:
+
+Proper handling of sensitive data.
+
+Protection against common vulnerabilities.
+
+Performance Optimization:
+
+Use of caching and efficient algorithms.
+
+Quick API responses under load.
+
+Documentation:
+
+Detailed README file with setup instructions.
+
+Setup Instructions
+Prerequisites
+Node.js and npm installed
+
+MySQL database
+
+Redis (for caching)
+
+Installation
+Clone the repository:
+
+bash
+Copy
+git clone https://github.com/yourusername/task-management-system.git
+cd task-management-system
+Install dependencies for the frontend and backend:
+
+bash
+Copy
+cd frontend
+npm install
+cd ../backend
+npm install
+Set up the MySQL database:
+
+Create a new database named task_management.
+
+Import the SQL schema from backend/database/schema.sql.
+
+Configure environment variables
