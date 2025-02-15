@@ -37,6 +37,7 @@ model User {
   password      String
   role          Role      @default(USER)
   image         String?
+  createdAt     DateTime? @default(now())
   tasks         Task[]
   sessions      Session[]
   tokens        Token[]
@@ -81,7 +82,9 @@ model Session {
 model TaskActivity {
   id          Int      @id @default(autoincrement())
   taskId      Int
-  action      String   
+  action      String
+  oldStatus    String?  
+  newStatus    String?   
   details     String?  // Additional details (e.g., field changes)
   performedBy Int      // User ID who performed the action
   performedAt DateTime @default(now())

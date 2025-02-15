@@ -33,10 +33,10 @@ const statVariants = {
   tap: { scale: 0.95 }
 }
 
-export default function LandingPage({ user, userState }) {
+export default function LandingPage({ user, userState, getUser }) {
     const router = useRouter();
     const overallStats = [
-        { icon: <FaTasks className="w-6 h-6" />, label: 'Total Tasks', value: userState?.totalTask },
+        { icon: <FaTasks className="w-6 h-6" />, label: 'Total Tasks', value: userState?.totalTasks },
         { icon: <FaCheckCircle className="w-6 h-6" />, label: 'Completed', value: userState?.totalCompleted },
         { icon: <SiProgress className="w-6 h-6" />, label: 'In Progress', value: userState?.totalInProgress },
         { icon: <FaCalendarAlt className="w-6 h-6" />, label: 'Pending', value: userState?.totalPending }
@@ -48,7 +48,7 @@ export default function LandingPage({ user, userState }) {
         router.push(`/tasks/addTask?userId=${user?.id}`); 
     };
 
-    console.log( user );
+    // console.log( user, userState );
 
     return (
         <motion.div
@@ -146,7 +146,7 @@ export default function LandingPage({ user, userState }) {
                             className="grid grid-cols-1 lg:grid-cols-2 gap-8"
                         >
                             {/* User Card */ }
-                            <UserCard user={user}/>
+                                <UserCard user={ user } getUser={ getUser } />
 
                             {/* Progress Visualization */ }
                                 <ProductivityBreakdown taskCompletion={ userState?.percentages?.completed } pendingTasks={ userState?.percentages?.pending } inprogress={ userState?.percentages?.inProgress} />

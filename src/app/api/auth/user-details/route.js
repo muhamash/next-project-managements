@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import validator from "validator"; // Importing validator for input validation
-import { prisma } from "../../../../services/prisma"; // Adjust the import as needed
+import validator from "validator";
+import { prisma } from "../../../../../services/prisma";
 
-export const dynamic = "force-dynamic"; // to ensure the route always re-renders
+export const dynamic = "force-dynamic";
 
 export async function GET(request) {
   try {
@@ -18,7 +18,7 @@ export async function GET(request) {
       );
     }
 
-    const sanitizedUserId = parseInt(userId, 10); // Sanitize and convert to integer
+    const sanitizedUserId = parseInt(userId, 10);
 
     // Fetch user details
     const user = await prisma.user.findUnique({
@@ -27,7 +27,7 @@ export async function GET(request) {
         id: true,
         name: true,
         email: true,
-        createdAt: true,
+        createdAt: true || false,
         sessions: {
           orderBy: {
             createdAt: "desc",
@@ -53,6 +53,8 @@ export async function GET(request) {
         action: true,
         taskId: true,
         performedAt: true,
+        details: true,
+        performedBy: true,
         task: {
           select: {
             title: true,
@@ -72,7 +74,6 @@ export async function GET(request) {
           acc.statusChangedTasks.push({
             taskId: activity.taskId,
             taskTitle: activity.task.title,
-            oldStatus: activity.task.status, // Previous status
             actionTime: activity.performedAt,
           });
         }
@@ -92,7 +93,7 @@ export async function GET(request) {
         userDetails: {
           id: user.id,
           name: user.name,
-          email: validator.normalizeEmail(user.email),
+          email: validator.normalizeEmail(user?.email),
           createdAt: user.createdAt,
           lastLogin: lastLogin,
         },

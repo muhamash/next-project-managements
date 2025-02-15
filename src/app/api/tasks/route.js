@@ -109,12 +109,13 @@ export async function POST(request) {
         },
       },
     } );
-    
+
     await prisma.taskActivity.create( {
       data: {
         taskId: newTask.id,
         action: "created",
-        performedBy: sanitizedUserId, 
+        performedBy: sanitizedUserId,
+        details: `Task created with title: ${title} and status: ${status}`,
         performedAt: createdAt,
       },
     } );
@@ -163,13 +164,14 @@ export async function DELETE(request) {
     });
 
     // Log the deletion activity
-    await prisma.taskActivity.create({
+    await prisma.taskActivity.create( {
       data: {
         taskId: deletedTask.id,
         action: "deleted",
-        performedBy: parseInt(userId), 
+        performedBy: parseInt( userId ),
+        details: `Task deleted: ${task.title}`,
       },
-    });
+    } );
 
     return NextResponse.json(
       { success: true, message: "Task soft deleted successfully" },
@@ -197,6 +199,10 @@ export async function PATCH(request) {
         { status: 400 }
       );
     }
+
+    const currentTask = await prisma.task.findUnique( {
+      where: { id: parseInt(taskId) },
+    } );
 
     // Parse the request body
     const { title, description, status } = await request.json();
@@ -229,17 +235,31 @@ export async function PATCH(request) {
         id: parseInt(taskId),
       },
       data: {
-        ...(title && { title }), // Update title if provided
-        ...(description && { description }), // Update description if provided
-        ...(status && { status }), // Update status if provided
+        ...(title && { title }), 
+        ...(description && { description }), 
+        ...(status && { status }), 
       },
     } );
-    
+
+    let action = "edited";
+    let details = `Task updated: `;
+
+    if (currentTask.status !== status) {
+      action = "status-changed";
+      details += `Status changed from ${currentTask.status} to ${status}. `;
+    }
+
+    if (currentTask.title !== title) {
+      details += `Title changed from "${currentTask.title}" to "${title}".`;
+    }
+
     await prisma.taskActivity.create( {
       data: {
         taskId: updatedTask.id,
         action: "updated",
-        details: JSON.stringify( updatedTask ),
+        details,
+        oldStatus: currentTask.status,
+        newStatus: status,
         performedBy: parseInt(userId),
       },
     } );
