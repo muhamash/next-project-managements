@@ -149,7 +149,7 @@ export default function LandingPage({ user, userState, getUser }) {
                                 <UserCard user={ user } getUser={ getUser } />
 
                             {/* Progress Visualization */ }
-                                <ProductivityBreakdown taskCompletion={ userState?.percentages?.completed } pendingTasks={ userState?.percentages?.pending } inprogress={ userState?.percentages?.inProgress} />
+                                <ProductivityBreakdown user={user} taskCompletion={ userState?.percentages?.completed } pendingTasks={ userState?.percentages?.pending } inprogress={ userState?.percentages?.inProgress} />
                         </motion.div>
 
                         <motion.div
