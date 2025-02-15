@@ -6,7 +6,7 @@ export default async function  ParallelLayout ( {
         <div className="flex flex-col gap-10 w-full p-5">
             {/* <TopBar/> */}
             { children }
-            <div className="-mx-2 mb-6 flex flex-wrap justify-between">
+            <div className="mb-6 flex justify-around gap-[0.5px] flex-wrap">
                 { inProgress }
                 { pending }
                 { complete }

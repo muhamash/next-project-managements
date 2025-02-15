@@ -20,7 +20,7 @@ export async function GET(request) {
       );
     }
 
-    if (!status || !["pending", "in_progress", "completed"].includes(status)) {
+    if (!status || !["pending", "in-progress", "completed"].includes(status)) {
       return NextResponse.json(
         { success: false, message: "Valid status is required" },
         { status: 400 }
