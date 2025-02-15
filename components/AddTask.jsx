@@ -5,15 +5,26 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { Bounce, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { createTask } from "../utils/actions/tasks";
+import { handleTask } from "../utils/actions/tasks";
 
-export default function AddTask({ task }) {
+export default function AddTask() {
     const router = useRouter();
-    const [formData, setFormData] = useState(task ? {
-        title: task.title,
-        description: task.description,
-        date: task.date,
-        category: task.category || '', 
+    const getSearchParams = useSearchParams();
+
+    const userId = getSearchParams?.get( "userId" );
+    const  title = getSearchParams?.get("title")
+    const description = getSearchParams?.get("description")
+    const date = getSearchParams?.get("date")
+    const status = getSearchParams?.get("status")
+    const edit = getSearchParams?.get( "edit" );
+    const taskId = getSearchParams?.get( "taskId" );
+            
+    const formattedDate = date ? new Date(date).toISOString().split("T")[0] : "";
+    const [formData, setFormData] = useState( edit  ? {
+        title: title,
+        description: description,
+        date: formattedDate,
+        category: status || '', 
     } : {
         title: '',
         description: '',
@@ -21,10 +32,9 @@ export default function AddTask({ task }) {
         category: '',
     } );
     
-    const [ state, formAction ] = React.useActionState( createTask, { error: null, success: false } );
-    // console.log( state );
-    const getSearchParams = useSearchParams();
-    const userId = getSearchParams.get( "userId" );
+    const [ state, formAction ] = React.useActionState( handleTask , { error: null, success: false } );
+    // console.log( task );
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,14 +54,25 @@ export default function AddTask({ task }) {
         formDataToSubmit.append( "description", formData.description );
         formDataToSubmit.append( "date", formData.date );
         formDataToSubmit.append( "category", formData.category );
-        formDataToSubmit.append( "userId",  userId);
+        formDataToSubmit.append( "userId", userId );
+        formDataToSubmit.append( "edit", edit );
+        formDataToSubmit.append( "taskId",  taskId);
 
-        const createdTask = await formAction( formDataToSubmit );
-        router.push( `/tasks?userId=${userId}` );
+        try {
+            await formAction( formDataToSubmit );
+        }
+        catch ( error )
+        {
+        console.error(error?.message ?? error);
+        }
+        finally
+        {
+            window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}`;
+        }
 
         if ( !state.error )
         {
-            toast( `${task ? "Task updated!" : "New task added!"}`, {
+            toast( `${edit ? "Task updated!" : "New task added!"}`, {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -71,10 +92,12 @@ export default function AddTask({ task }) {
         <div className="w-[500px] min-w-[310px] rounded-lg bg-gray-800 shadow-xl backdrop-blur-md">
             <div className="p-6">
                 <h2 className="mb-6 text-2xl font-bold text-green-400">
-                    {task ? "Update Task" : "Create Task"}
+                    {edit ? "Update Task" : "Create Task"}
                 </h2>
                 <form action={handleSubmit}>
-                    <input type="hidden" name="userId" value={userId} />
+                    {/* <input type="hidden" name="userId" value={ userId } /> */}
+                    {/* <input type="edit" name="edit" value={ edit } /> */}
+                    {/* <input type="hidden" name="taskId" value={taskId} /> */}
                     <div className="mb-4">
                         <label htmlFor="title" className="mb-1 block text-sm font-medium text-gray-300">
                             Task Name
@@ -132,7 +155,7 @@ export default function AddTask({ task }) {
                             <option value="">Select a category</option>
                             <option value="pending">Pending</option>
                             <option value="in-progress">In Progress</option>
-                            <option value="complete">Complete</option>
+                            <option value="completed">Complete</option>
                         </select>
                     </div>
                     <div className="flex justify-end space-x-3">
@@ -147,7 +170,7 @@ export default function AddTask({ task }) {
                             type="submit"
                             className="rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                         >
-                            {task ? "Update" : "Create Task"}
+                            {edit ? "Update" : "Create Task"}
                         </button>
                     </div>
                 </form>

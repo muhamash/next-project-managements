@@ -1,38 +1,51 @@
 "use server"
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { auth } from '../../auth';
 
-export async function createTask(prevState, formData) {
+export async function handleTask ( prevState, formData )
+{
     const title = formData.get("title");
     const description = formData.get("description");
     const date = formData.get("date");
     const status = formData.get("category");
     const userId = formData.get("userId");
+    const taskId = formData.get("taskId");
+    const edit = formData.get("edit") === "true"; 
 
     if (!title || !description || !date || !status || !userId) {
         return { success: false, message: "All fields are required." };
     }
-    console.log(title, userId, description, status, date);
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`, {
-            method: "POST",
+        const session = await auth();
+        const isEditing = edit && taskId;
+        const url = isEditing
+            ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks?taskId=${taskId}&userId=${session?.user?.id}`
+            : `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`;
+
+        const response = await fetch(url, {
+            method: isEditing ? "PATCH" : "POST",
             headers: {
                 "Content-Type": "application/json",
             },
+            cache: "no-store",
             body: JSON.stringify({ title, description, status, userId, date }),
         });
 
-        const data = await response.json();
-        console.log(data);
+        // if (!response.ok) {
+        //     throw new Error(`Failed to ${isEditing ? "update" : "create"} task`);
+        // }
 
-        revalidatePath( `/tasks?userId=${userId}` );
-        // const freshTasks = await fetchTasks( userId, status );
+        const data = await response.json();
+        console.log( data );
         
+        revalidatePath(`${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${session?.user?.id}`);
+
         return { success: true, task: data?.task };
     } catch (error) {
-        console.error("Error creating task:", error);
-        return { success: false, message: "Error creating task" };
+        console.error(`Error ${edit ? "updating" : "creating"} task:`, error);
+        return { success: false, message: `Error ${edit ? "updating" : "creating"} task` };
     }
 }
 
@@ -82,7 +95,7 @@ export async function deleteTask ( prevState, formData )
         //     throw new Error(data.message || "Failed to fetch tasks");
         // }
 
-        console.log( data );
+        // console.log( data );
         if ( response?.ok )
         {
             return { success: true };

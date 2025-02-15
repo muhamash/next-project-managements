@@ -4,7 +4,6 @@
 // import React from 'react'
 import React from "react";
 import { useFormStatus } from "react-dom";
-import { Bounce, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { deleteTask } from "../utils/actions/tasks";
 
@@ -12,8 +11,7 @@ export default function DeleteIcon ({id, status, userId})
 {
     const [state, formAction] = React.useActionState(deleteTask, { error: null, success: false });
     const { pending } = useFormStatus();
-
-    console.log( state );
+    // console.log( state );
 
     return (
         <form action={ formAction }>
@@ -21,23 +19,6 @@ export default function DeleteIcon ({id, status, userId})
             {/* <input type="hidden" name="userId" value={ userId } /> */}
             <button type="submit">
                 <svg
-                    onClick={ () =>
-                    {
-
-                        // handleDelete();
-                        toast( `Task deleted!!`, {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                            transition: Bounce,
-                        } );
-
-                    } }
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"

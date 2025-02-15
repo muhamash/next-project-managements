@@ -187,7 +187,8 @@ export async function DELETE(request) {
 export async function PATCH(request) {
   try {
     const url = new URL(request.url);
-    const taskId = url.searchParams.get("taskId");
+    const taskId = url.searchParams.get( "taskId" );
+    const userId = url.searchParams.get("userId");
 
     // Validate taskId
     if (!taskId || !validator.isNumeric(taskId)) {
@@ -215,9 +216,9 @@ export async function PATCH(request) {
       );
     }
 
-    if (status && !validator.isAlpha(status.replace(/_/g, ""))) {
+    if (!status || !/^[a-zA-Z\s-]+$/.test(status)) {
       return NextResponse.json(
-        { success: false, message: "Invalid status" },
+        { success: false, message: "Valid status is required" },
         { status: 400 }
       );
     }
@@ -238,8 +239,8 @@ export async function PATCH(request) {
       data: {
         taskId: updatedTask.id,
         action: "updated",
-        details: JSON.stringify( updatedTask ), // Log the updated fields
-        // performedBy: userId,
+        details: JSON.stringify( updatedTask ),
+        performedBy: parseInt(userId),
       },
     } );
 
