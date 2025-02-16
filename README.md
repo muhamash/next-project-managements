@@ -1,163 +1,118 @@
-Task Management System
-Objective
-Develop a scalable and maintainable full-stack Task Management System with advanced features to test the candidate's ability to:
-
-Build a scalable and maintainable full-stack application.
-
-Integrate multiple technologies seamlessly.
-
-Optimize for performance, usability, and security.
-
-Project Requirements
-Frontend (ReactJS)
-Core Features:
-
-User authentication (Login/Signup pages).
-
-Dashboard to display a user's tasks with filtering (e.g., by status, due date).
-
-Task creation, editing, and deletion forms with validation.
-
-Responsive design compatible with mobile and desktop.
-
-Add dark mode support.
-
-RESTful APIs for authentication and CRUD operations.
-
-Basic error handling and structured response format.
-
-Enhancements:
-
-Integrate caching (e.g., Redis) to improve API response times.
-
-Implement unit and integration testing for critical APIs.
-
-Design APIs to handle bulk task updates (e.g., batch editing).
-
-Add a task activity log (track actions like creation, updates, and deletions).
-
-Backend (Node.js with Express)
-Core Features:
-
-RESTful APIs for authentication and CRUD operations.
-
-Basic error handling and structured response format.
-
-Enhancements:
-
-Integrate caching (e.g., Redis) to improve API response times.
-
-Implement unit and integration testing for critical APIs.
-
-Design APIs to handle bulk task updates (e.g., batch editing).
-
-Add a task activity log (track actions like creation, updates, and deletions).
-
-Database (MySQL)
-Core Structure:
-
-Tables: Users, Tasks, Roles, Task Activities.
-
-Relationships:
-
-Users ↔ Tasks: One-to-Many.
-
-Tasks ↔ Task Activities: One-to-Many.
-
-Users ↔ Roles: Many-to-Many.
-
-Enhancements:
-
-Add indexing for frequently queried columns (e.g., User_ID, Status).
-
-Use stored procedures for complex queries (e.g., generating task reports).
-
-Implement soft deletes using a Deleted_at column.
-
-Additional Features
-Performance Optimizations:
-Apply lazy loading for tasks on the frontend.
-
-Use database query optimization techniques (e.g., eager loading with Laravel or JOINs in SQL).
-
-Security Enhancements:
-Sanitize user inputs to prevent SQL injection.
-
-Implement HTTPS with CSRF tokens.
-
-Secure sensitive information using environment variables (e.g., API keys).
-
-Analytics and Reporting (Bonus):
-Generate a summary report of tasks (e.g., total tasks, completed, overdue).
-
-Evaluation Criteria
-Code Quality:
-
-Clean, modular, and DRY code.
-
-Well-commented and formatted.
-
-Functionality:
-
-Fulfillment of core and advanced features.
-
-Minimal bugs and glitches.
-
-UI/UX Design:
-
-Intuitive and visually appealing interface.
-
-Responsive across devices.
-
-Database Design:
-
-Efficient structure and normalization.
-
-Indexing and relationship management.
-
-Security:
-
-Proper handling of sensitive data.
-
-Protection against common vulnerabilities.
-
-Performance Optimization:
-
-Use of caching and efficient algorithms.
-
-Quick API responses under load.
-
-Documentation:
-
-Detailed README file with setup instructions.
-
-Setup Instructions
-Prerequisites
-Node.js and npm installed
-
-MySQL database
-
-Redis (for caching)
-
-Installation
-Clone the repository:
-
-bash
-Copy
-git clone [https://github.com/yourusername/task-management-system.git](https://github.com/muhamash/next-project-managements)
+# 📝 Task Management System
+
+A **scalable and maintainable** full-stack Task Management System with advanced features for task tracking, user authentication, and performance optimizations.
+
+## 🚀 Features
+
+### 🔹 **Frontend (React.js with Next.js)**
+✅ User authentication (Login/Signup).  
+✅ Dashboard with **task filtering** (by status, due date, etc.).  
+✅ Create, edit, and delete tasks **with validation**.  
+✅ **Dark mode support** for better accessibility.  
+✅ **Responsive design** (mobile & desktop).  
+
+### 🔹 **Backend (Node.js + Express.js)**
+✅ RESTful APIs for authentication & task management.  
+✅ **Error handling** with structured response format.  
+✅ **Bulk task updates** (batch editing).  
+✅ **Task activity log** (track task creation, updates, and deletions).  
+
+### 🔹 **Database (MySQL)**
+✅ Tables: `Users`, `Tasks`, `Roles`, `Task Activities`.  
+✅ **Relationships**:
+   - `Users` ↔ `Tasks` (One-to-Many).  
+   - `Tasks` ↔ `Task Activities` (One-to-Many).  
+   - `Users` ↔ `Roles` (Many-to-Many).  
+✅ **Optimizations**: Indexing, stored procedures, and soft deletes.  
+
+### 🔹 **Enhancements**
+🔹 **Caching**: Redis integration for faster API responses.  
+🔹 **Testing**: Unit and integration tests for APIs.  
+🔹 **Security**: CSRF protection, SQL injection prevention, and HTTPS support.  
+🔹 **Performance**: Lazy loading, optimized database queries.  
+🔹 **Analytics**: Task summary reports (total, completed, overdue).  
+
+---
+
+## 📂 **Project Structure**
+task-management-system/ │── frontend/ # React + Next.js frontend
+│──  # Node.js as backend
+│── database/ # MySQL database schema & migrations
+│──utils/ # Utility functions (caching, logging, etc.)
+│──routes/ # API endpoints
+│── middleware/ # Authentication & security middleware
+│── .env.example # Environment variable configuration
+│── README.md # Project documentation
+
+
+## 🛠️ **Setup Instructions**
+### **1️⃣ Prerequisites**
+Ensure you have the following installed on your system:
+- **[Node.js](https://nodejs.org/)** and **npm** (for package management).
+- **[MySQL](https://www.mysql.com/)** (for database storage).
+- **.env file configuration** 
+
+---
+
+### **2️⃣ Installation Steps**
+#### **🔹 Clone the repository**
+```bash
+git clone https://github.com/muhamash/next-project-managements.git
 cd task-management-system
-Install dependencies for the frontend and backend:
-
-bash
-Copy
-cd frontend
 npm install
-cd ../backend
-npm install
-Set up the MySQL database:
+npm run dev
+or, 
+yarn
+yarn dev
 
-Create a new database named task_management.
+Now, open http://localhost:3000 to access the app.
 
-Import the SQL schema from backend/database/schema.sql.
+🔐 Security Best Practices
+✅ Sanitize user inputs to prevent SQL injection.
+✅ Use HTTPS and enable CSRF tokens.
+✅ Store sensitive information in environment variables.
+✅ Implement authentication with JWT tokens.
 
-Configure environment variables
+📊 Performance Optimizations
+✅ async operations to loading for task lists.
+✅ Optimized database queries (JOINs, indexing).
+✅ Nextjs caching to improve response times.
+
+🛡️ Testing
+Run unit and integration tests using:
+
+bash -->> npm test
+
+📜 API Endpoints
+🔹 Authentication
+Method	Endpoint	Description
+POST	/api/auth/login	User login
+POST	/api/auth/signup	User registration
+POST	/api/auth/logout	User logout
+🔹 Task Management
+Method	Endpoint	Description
+GET	/api/tasks	Fetch all tasks
+POST	/api/tasks	Create a new task
+PUT	/api/tasks/:id	Update a task
+DELETE	/api/tasks/:id	Delete a task
+PATCH	/api/tasks/bulk	Bulk update tasks
+
+GET /api/auth/download/excel?userId=${userId} to download user task on a excel file
+GET /api/auth/download/csv?userId=${userId} to download csv file
+GET api/tasks/user-tasks-states?userId=${userId} get user sates
+GET /api/tasks?userId=${userId}&status=${status} get status based task or id based
+GET api/auth/user-details?userId=${userId} user details
+
+
+🏆 Evaluation Criteria
+✔️ Code Quality: Clean, modular, DRY principles.
+✔️ Functionality: Fully working core & advanced features.
+✔️ UI/UX Design: Responsive, intuitive, and visually appealing.
+✔️ Database Design: Efficient schema with normalization & indexing.
+✔️ Security: Protection against common vulnerabilities.
+✔️ Performance Optimization: Fast API responses with caching & optimized queries.
+✔️ Documentation: Clear setup instructions and API references.
+
+
+📝 License
+This project is licensed under the MIT License.

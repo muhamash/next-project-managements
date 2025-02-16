@@ -16,7 +16,6 @@
     "exceljs": "^4.4.0",
     "framer-motion": "^12.4.3",
     "json2csv": "^6.0.0-alpha.2",
-    "jsonwebtoken": "^9.0.2",
     "next": "15.1.7",
     "next-auth": "^5.0.0-beta.25",
     "react": "^19.0.0",

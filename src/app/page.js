@@ -15,6 +15,6 @@ export default async function HomePage() {
     getUser = getUserInfo(user.id);
   }
 
-  // throw new Error( "hello" );
+  // throw new Error( "hello error!!" );
   return <LandingPage user={user} getUser={getUser} userState={userState} />;
 }
