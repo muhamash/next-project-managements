@@ -55,7 +55,7 @@ export default function LandingPage({ user, userState, getUser }) {
             initial="hidden"
             animate="visible"
             variants={ containerVariants }
-            className="min-h-screen p-8 bg-gradient-to-br from-grey-500 to-blue-50 pt-[100]"
+            className="min-h-screen p-8 bg-gradient-to-br from-grey-500 to-blue-50 pt-[130]"
         >
             {
                 !user ? (

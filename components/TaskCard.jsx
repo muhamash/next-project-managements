@@ -26,7 +26,7 @@ export default function TaskCard ( { task, status, userId } )
                 <h4 className={ `mb-2 font-semibold ${colorFunction( status )}` }>
                     { task?.title || "default title" }
                 </h4>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center justify-center w-fit h-fit">
                     {/* delete */ }
                     <DeleteIcon id={ task?.id } status={ task?.status } />
                     {/* edit */ }
@@ -34,7 +34,7 @@ export default function TaskCard ( { task, status, userId } )
                 </div>
             </div>
             <p className="mb-2 text-sm text-zinc-200">
-                { task?.description || "default textdfg" }
+                { task?.description || "default text" }
             </p>
 
             <p className="mt-6 text-xs text-zinc-400">

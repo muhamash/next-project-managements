@@ -8,7 +8,7 @@ export default function EditButton({ task }) {
     const handleEditClick = () =>
     {
         // console.log( task );
-        router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/tasks/addTask?userId=${task?.userId}&&taskId=${task?.id}&title=${task?.title}&description=${task.description}&date=${task?.updatedAt}&status=${task?.status}&edit=true`);
+        router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/tasks/addTask?userId=${task?.userId}&taskId=${task?.id}&title=${task?.title}&description=${task.description}&date=${task?.updatedAt}&status=${task?.status}&edit=true`);
     };
 
     return (

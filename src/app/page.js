@@ -12,7 +12,7 @@ export default async function HomePage() {
 
   if (user?.id) {
     userState = await fetchTaskStatusPercentage(user.id);
-    getUser = await getUserInfo(user.id);
+    getUser = getUserInfo(user.id);
   }
 
   return <LandingPage user={user} getUser={getUser} userState={userState} />;
