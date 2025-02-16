@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import validator from "validator";
+import { prisma } from "../../../../../services/prisma";
 
-const prisma = new PrismaClient();
 
 // POST Route to create a user
 export async function POST(request) {

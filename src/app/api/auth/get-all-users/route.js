@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { prisma } from "../../../../../services/prisma";
 
-const prisma = new PrismaClient();
 // GET Route to fetch all users
 export async function GET(request) {
   try {

@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { auth, signOut } from "../../auth";
+import ErrorBoundary from "../../components/ErrorBoundary";
 import TopBar from "../../components/TopBar";
 import "./globals.css";
 
@@ -32,11 +33,13 @@ export default async function RootLayout ( { children } )
       <body
         className={ `${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white` }
       >
-        <TopBar session ={ session } />
-        { children }
-        {/* { inProgress }
+        <ErrorBoundary>
+          <TopBar session={ session } />
+          { children }
+          {/* { inProgress }
         { pending }
         { complete } */}
+        </ErrorBoundary>
       </body>
     </html>
   );

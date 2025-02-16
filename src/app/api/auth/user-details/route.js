@@ -63,8 +63,7 @@ export async function GET(request) {
           }
       },
     } );
-
-    // Count actions by type and gather task details for "status-changed" actions
+    
     const activitySummary = {
       counts: {
         created: 0,
