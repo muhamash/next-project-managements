@@ -11,7 +11,7 @@ A **scalable and maintainable** full-stack Task Management System with advanced 
 ✅ **Dark mode support** for better accessibility.  
 ✅ **Responsive design** (mobile & desktop).  
 
-### 🔹 **Backend (Node.js + Express.js)**
+### 🔹 **Backend (Node.js)**
 ✅ RESTful APIs for authentication & task management.  
 ✅ **Error handling** with structured response format.  
 ✅ **Bulk task updates** (batch editing).  
