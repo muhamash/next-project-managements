@@ -11,7 +11,7 @@ A **scalable and maintainable** full-stack Task Management System with advanced 
 ✅ **Dark mode support** for better accessibility.  
 ✅ **Responsive design** (mobile & desktop).  
 
-### 🔹 **Backend (Node.js)**
+### 🔹 **Backend (Node.js with Next.js)**
 ✅ RESTful APIs for authentication & task management.  
 ✅ **Error handling** with structured response format.  
 ✅ **Bulk task updates** (batch editing).  
@@ -99,7 +99,7 @@ PATCH	/api/tasks/bulk	Bulk update tasks
 
 GET /api/auth/download/excel?userId=${userId} to download user task on a excel file
 GET /api/auth/download/csv?userId=${userId} to download csv file
-GET api/tasks/user-tasks-states?userId=${userId} get user sates
+GET api/tasks/user-tasks-states?userId=${userId} get user task sates
 GET /api/tasks?userId=${userId}&status=${status} get status based task or id based
 GET api/auth/user-details?userId=${userId} user details
 

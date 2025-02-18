@@ -1,26 +1,29 @@
 "use client"
+
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { use } from 'react';
 
 export default function UserCard ( { user, getUser } )
 {
-    const [ info, setInfo ] = useState( "" );
+    // const [ info, setInfo ] = useState( "" );
 
-    useEffect( () =>
-    {
-        const fetchData = async () =>
-        {
-            const data = await getUser;
-            if ( data?.success )
-            {
-                setInfo( data );
-            }
-        };
+    // useEffect( () =>
+    // {
+    //     const fetchData = async () =>
+    //     {
+    //         const data = await getUser;
+    //         if ( data?.success )
+    //         {
+    //             setInfo( data );
+    //         }
+    //     };
 
-        fetchData();
-    }, [ getUser ] );
+    //     fetchData();
+    // }, [ getUser ] );
+
+    const info = use( getUser );
     
-    console.log( info );
+    // console.log( info.taskActivitySummary );
 
     return (
         <motion.div

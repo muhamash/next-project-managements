@@ -1,12 +1,13 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { FaCalendarAlt, FaCheckCircle, FaTasks } from 'react-icons/fa'
-import { SiProgress } from 'react-icons/si'
-import ProductivityBreakdown from './ProductivityBreakDown'
-import UserCard from './UserCard'
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { use } from 'react';
+import { FaCalendarAlt, FaCheckCircle, FaTasks } from 'react-icons/fa';
+import { SiProgress } from 'react-icons/si';
+import ProductivityBreakdown from './ProductivityBreakDown';
+import UserCard from './UserCard';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -33,7 +34,9 @@ const statVariants = {
   tap: { scale: 0.95 }
 }
 
-export default function LandingPage({ user, userState, getUser }) {
+export default function LandingPage ( { user, userStatePromise, getUser } )
+{
+    const userState = use( userStatePromise );
     const router = useRouter();
     const overallStats = [
         { icon: <FaTasks className="w-6 h-6" />, label: 'Total Tasks', value: userState?.totalTasks },
@@ -41,7 +44,6 @@ export default function LandingPage({ user, userState, getUser }) {
         { icon: <SiProgress className="w-6 h-6" />, label: 'In Progress', value: userState?.totalInProgress },
         { icon: <FaCalendarAlt className="w-6 h-6" />, label: 'Pending', value: userState?.totalPending }
     ];
-
     const handleStart = () =>
     {
         console.log( user?.id );
@@ -125,7 +127,7 @@ export default function LandingPage({ user, userState, getUser }) {
                                     variants={ itemVariants }
                                     whileHover="hover"
                                     whileTap="tap"
-                                    className="bg-cyan-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                                    className="bg-cyan-800 p-6 rounded-xl shadow-sm hover:shadow-md shadow-slate-400 transition-shadow"
                                 >
                                     <div className="flex items-center gap-4">
                                         <motion.div className="p-3 bg-blue-100 rounded-lg text-blue-600">

@@ -111,6 +111,7 @@ export const fetchTaskStatusPercentage = async (userId) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks/user-tasks-states?userId=${userId}`);
         const data = await response.json();
 
+        // console.log( data );
         return data;
     } catch ( error )
     {
