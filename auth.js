@@ -176,7 +176,12 @@ export const {
 
     async session ( { session, token } )
     {
-      session.user = token.user;
+      session.user = {
+        id: token.user.id,
+        email: token.user.email,
+        name: token.user.name,
+        role: token.user.role, 
+      };
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       session.error = token.error;

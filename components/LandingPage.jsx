@@ -46,7 +46,7 @@ export default function LandingPage ( { user, userStatePromise, getUser } )
     ];
     const handleStart = () =>
     {
-        console.log( user?.id );
+        // console.log( user?.id );
         router.push(`/tasks/addTask?userId=${user?.id}`); 
     };
 

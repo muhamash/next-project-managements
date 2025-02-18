@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import { useFormStatus } from "react-dom";
 import { loginAction } from "../utils/actions/login";
+import SubmitButton from "./SubmitButton";
 
 export default function LoginForm() {
     const [state, formAction] = React.useActionState(loginAction, { error: null, success: false });
-    const { pending } = useFormStatus();
     const router = useRouter();
 
     useEffect(() => {
@@ -29,9 +28,7 @@ export default function LoginForm() {
                 <input type="password" id="password" name="password" required className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300" placeholder="Password" />
             </div>
 
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50" disabled={pending}>
-                {pending ? "Logging in..." : "Login"}
-            </button>
+            <SubmitButton/>
 
             <div className="text-center mt-4">
                 <Link href="/registration" className="text-blue-500 hover:underline">Don't have an account? Register</Link>

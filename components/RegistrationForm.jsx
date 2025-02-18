@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import { useFormStatus } from "react-dom";
 import { registerUser } from "../utils/actions/registration";
+import SubmitButton from "./SubmitButton";
 
 export default function RegisterForm() {
     const [state, formAction] = React.useActionState(registerUser, { error: null, success: false });
-    const { pending } = useFormStatus();
+
     const router = useRouter();
 
     // if ( state?.error )
@@ -74,13 +74,7 @@ export default function RegisterForm() {
                 />
             </div>
 
-            <button 
-                type="submit" 
-                className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 disabled:opacity-50" 
-                disabled={pending}
-            >
-                {pending ? "Registering..." : "Register"}
-            </button>
+            <SubmitButton/>
 
             <div className="text-center mt-4">
                 <Link href="/login" className="text-blue-500 hover:underline">Already have an account? Login</Link>

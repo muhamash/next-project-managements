@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { logoutAction } from '../utils/actions/login';
 
@@ -9,6 +9,7 @@ export default function TopBar({session}) {
     const [ isMenuOpen, setIsMenuOpen ] = useState( false );
     const pathName = usePathname();
     const [ isPending, startTransition ] = useTransition();
+    const router = useRouter();
     // console.log( pathName );
 
     const toggleMenu = () => {
@@ -20,7 +21,10 @@ export default function TopBar({session}) {
         startTransition( async () =>
         {
             await logoutAction();
-            router.push( "/" );
+            setTimeout( () =>
+            {
+                window.location.href = "/";
+            }, 300)
         })
     }
     // console.log( session?.user );
@@ -105,7 +109,6 @@ export default function TopBar({session}) {
                         </Link>
                     )
                 }
-
 
                 {
                     session?.user ? (

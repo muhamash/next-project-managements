@@ -73,7 +73,7 @@ export default function AddTask() {
                 // router.replace( `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}` );
                 window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks?userId=${userId}`;
                 
-            }, 500 );
+            }, 1000 );
             // router.refresh();
         }
 

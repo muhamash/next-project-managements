@@ -1,12 +1,7 @@
-export const LOGIN = '/login';
-export const DASHBOARD = '/dashboard';
-export const ROOT = '/';
-
-export const PUBLIC_ROUTES = [
-  LOGIN,
-  '/registration',
-  ROOT 
-];
+export const LOGIN = "/login";
+export const DASHBOARD = "/dashboard";
+export const ROOT = "/";
+export const PUBLIC_ROUTES = [ LOGIN, "/registration", ROOT ];
 
 export const calculatePercentage = ( part, total ) =>
 {

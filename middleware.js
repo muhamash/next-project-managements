@@ -1,51 +1,35 @@
 import NextAuth from "next-auth";
-import { NextResponse } from "next/server";
 import { authConfig } from "./auth.config";
 import { DASHBOARD, LOGIN, PUBLIC_ROUTES } from "./utils/helper";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth(async function middleware(req) {
+export default auth((req) => {
   const { nextUrl } = req;
-  console.log( req );
-  
-  const isAuthenticated = req.auth?.user !== undefined;
-  
-  // Normalize path handling
-  const cleanPath = (path) => path.replace(/\/$/, "") || "/";
-  const currentPath = cleanPath(nextUrl.pathname);
-  
-  const isPublicRoute = PUBLIC_ROUTES.some(route => 
-    currentPath === cleanPath(route)
-  );
+  const isAuthenticated = !!req.auth;
+  const userRole = req.auth?.user?.role;
 
-  console.log(`Auth Check:`, {
-    path: currentPath,
-    isAuthenticated,
-    isPublicRoute,
-    session: req.auth
-  });
+  console.log(req.auth);
 
-  // Handle authenticated users
+  const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
+  const isAdminRoute = nextUrl.pathname.startsWith(DASHBOARD);
+  const isUserRoute = nextUrl.pathname.startsWith("/tasks");
+
+  if (!isAuthenticated && !isPublicRoute) {
+    return Response.redirect(new URL(LOGIN, nextUrl));
+  }
+
+  // Redirect users based on role
   if (isAuthenticated) {
-    if (isPublicRoute && currentPath !== cleanPath(DASHBOARD)) {
-      console.log(`Redirecting authenticated user from public route to dashboard`);
-      return NextResponse.redirect(new URL(DASHBOARD, nextUrl));
+    if (userRole === "ADMIN" && isUserRoute) {
+      return Response.redirect(new URL(DASHBOARD, nextUrl));
     }
-    return NextResponse.next();
+    if (userRole === "USER" && isAdminRoute) {
+      return Response.redirect(new URL("/tasks/addTask", nextUrl));
+    }
   }
-
-  // Handle unauthenticated users
-  if (!isPublicRoute) {
-    console.log(`Redirecting unauthenticated user to login`);
-    const redirectUrl = new URL(LOGIN, nextUrl);
-    redirectUrl.searchParams.set("from", currentPath);
-    return NextResponse.redirect(redirectUrl);
-  }
-
-  return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/api/(.*)"],
+  matcher: [ "/((?!api|_next|.*\\.[\\w]+$).*)", "/", "/trpc(.*)" ],
 };
