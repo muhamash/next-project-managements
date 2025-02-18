@@ -10,7 +10,7 @@ export default auth( ( req ) =>
   const isAuthenticated = !!req.auth;
   const userRole = req.auth?.user?.user?.role;
 
-  console.log( "Middleware running", req.auth?.user?.user?.role );
+  // console.log( "Middleware running", req.auth?.user?.user?.role );
 
   if (req.auth?.error || req.auth?.user?.error || req.auth?.user?.user?.error === "RefreshAccessTokenError" || req.auth?.error || req.auth?.user?.error || req.auth?.user?.user?.error === "SessionExpired") {
     console.log('Token refresh failed, redirecting to login');

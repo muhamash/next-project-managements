@@ -90,8 +90,9 @@ export async function GET(request) {
     } );
 
     // Last login time (from the latest session)
-    const lastLogin = user?.tokens.length > 0 ? user.tokens[0].createdAt : user.tokens;
-
+    const lastLogin = user?.tokens.length > 0 ? user.tokens[ 0 ].createdAt : user.tokens.createdAt;
+    
+    // console.log( "User Details: activity", user?.tokens );
     // Return the response with user details and activity summary
     return NextResponse.json(
       {

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { use } from 'react';
+import LastActive from './LastLogin';
 
 export default function UserCard ( { user, getUser } )
 {
@@ -23,7 +24,7 @@ export default function UserCard ( { user, getUser } )
 
     const info = use( getUser );
     
-    // console.log( info.taskActivitySummary );
+    console.log( info );
 
     return (
         <motion.div
@@ -44,9 +45,7 @@ export default function UserCard ( { user, getUser } )
                     <p className="text-sm text-slate-100">
                         <span className="font-medium">Member since: { new Date( info?.userDetails?.createdAt ).toLocaleDateString( 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' } ) }</span>
                     </p>
-                    {/* <p className="text-sm text-slate-100">
-                        <span className="font-medium">Last active:</span> { info?.userDetails?.lastLogin }
-                    </p> */}
+                    <LastActive info={info}/>
                 </div>
             </div>
 
@@ -105,7 +104,6 @@ export default function UserCard ( { user, getUser } )
                         </span>
                     </motion.div>
 
-                    {/* Optional: Add progress bar or dynamic visual based on counts */ }
                     <p className='text-[10px] font-mono text-orange-500'>Activity score</p>
                     <div className="h-2 bg-slate-100 rounded-full overflow-hidden mt-2">
                         <motion.div
