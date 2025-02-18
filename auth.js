@@ -88,7 +88,7 @@ export const {
         {
           session.token = newSessionToken;
           session.refreshToken = newRefreshToken,
-          session.expiresAt = newExpires;
+            session.expiresAt = newExpires;
           await prisma.token.update( {
             where: { id: session.id },
             data: { token: newSessionToken, refreshToken: newRefreshToken, expiresAt: newExpires },
@@ -138,54 +138,60 @@ export const {
   //   },
   // },
   callbacks: {
-   async jwt({ token, user, account }) {
-    // Initial login
-    if (account && user) {
-      return {
-        ...token,
-        accessToken: user.accessToken,
-        accessTokenExpires: user.accessTokenExpires,
-        refreshToken: user.refreshToken,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        },
-      };
-    }
+    async jwt ( { token, user, account } )
+    {
+      // Initial login
+      if ( account && user )
+      {
+        // console.log( 'JWT User Role on Login:', user.role );
+        return {
+          ...token,
+          accessToken: user.accessToken,
+          accessTokenExpires: user.accessTokenExpires,
+          refreshToken: user.refreshToken,
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          },
+        };
+      }
 
-    // Return previous token if not expired
-    if (Date.now() < token.accessTokenExpires) {
-      return token;
-    }
+      // Return previous token if not expired
+      if ( Date.now() < token.accessTokenExpires )
+      {
+        return token;
+      }
 
-    // Attempt refresh
-    const refreshedToken = await refreshAccessToken(token);
+      // console.log('JWT Token User Role:', token.user?.role);
+      // Attempt refresh
+      const refreshedToken = await refreshAccessToken( token );
     
-    // If refresh failed, clear session
-    if (refreshedToken?.error) {
-      await prisma.token.deleteMany({ 
-        where: { userId: parseInt(token.user.id) } 
-      });
-      return { ...token, error: "SessionExpired" };
-    }
+      // If refresh failed, clear session
+      if ( refreshedToken?.error )
+      {
+        await prisma.token.deleteMany( {
+          where: { userId: parseInt( token.user.id ) }
+        } );
+        return { ...token, error: "SessionExpired" };
+      }
     
-    return refreshedToken;
-  },
+      return refreshedToken;
+    },
 
     async session ( { session, token } )
     {
       session.user = {
+        ...session.user,
         id: token.user.id,
-        email: token.user.email,
-        name: token.user.name,
-        role: token.user.role, 
+        role: token.user.role,
       };
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       session.error = token.error;
 
+      console.log( 'Session Token User Role:', token.user?.role );
       return session;
     },
   },

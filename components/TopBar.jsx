@@ -103,7 +103,7 @@ export default function TopBar({session}) {
             {/* auth */ }
             <div className='flex gap-3'>
                 {
-                    pathName !== '/' && (
+                    pathName !== '/' && session?.user?.role !== "ADMIN" && (
                         <Link href="/" className='px-4 py-2 bg-violet-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
                             Home
                         </Link>
@@ -119,7 +119,7 @@ export default function TopBar({session}) {
                                 }
                             </button>
                             {
-                                session?.user && pathName !== '/task' && (
+                                session?.user?.role === "USER" && pathName !== '/task' && (
                                     <Link href={ `/tasks?userId=${session?.user?.id}` } className='px-4 py-2 bg-sky-500 text-white rounded-md shadow-sm shadow-slate-500 hover:shadow transition-all duration-200 font-mono'>
                                         Tasks
                                     </Link>
