@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { redirect } from "next/navigation";
 import { auth } from "../auth";
 import TopBar from "../components/TopBar";
 import "./globals.css";
@@ -21,6 +22,12 @@ export const metadata = {
 export default async function RootLayout ( { children } )
 {
   const session = await auth();
+  console.log( session );
+  if ( session?.error === "RefreshAccessTokenError" ||  session?.error === "SessionExpired" )
+  {
+    redirect( "/login" );
+  }
+  
   return (
     <html lang="en">
       <body

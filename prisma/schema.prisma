@@ -65,6 +65,9 @@ model Token {
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
   expiresAt   DateTime
+
+  @@index([userId])
+  @@map("Token")
 }
 
 model Session {

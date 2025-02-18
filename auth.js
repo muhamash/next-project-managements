@@ -10,19 +10,24 @@ async function refreshAccessToken(token) {
   try {
     const userId = parseInt(token?.user?.id);
     const existingToken = await prisma.token.findFirst({
-      where: { userId, refreshToken: token.refreshToken },
+      where: {
+        userId,
+        refreshToken: token.refreshToken,
+        expiresAt: { gt: new Date() },
+      },
     });
 
     if (!existingToken) {
-      await prisma.token.deleteMany({ where: { userId } });
-      throw new Error("No valid tokens - requires re-login");
+      await prisma.token.deleteMany({ where: { userId,  expiresAt: { lt: new Date() } } });
+      console.warn( 'No valid token found for user:', userId );
+      return { error: "RefreshAccessTokenError" };
     }
 
     const newAccessToken = uuidv4();
-    const newExpires = new Date(Date.now() + 15 * 60 * 1000); 
+    const newExpires = new Date(Date.now() + 30 * 60 * 1000); 
 
     await prisma.token.update({
-      where: { id: existingToken.id },
+      where: { id: existingToken?.id },
       data: { token: newAccessToken, expiresAt: newExpires },
     });
 
@@ -76,7 +81,7 @@ export const {
         // Generate new session and refresh tokens
         const newSessionToken = uuidv4();
         const newRefreshToken = `${uuidv4()}-${new Date().toISOString()}`;
-        const expiresIn = 15 * 60 * 1000;
+        const expiresIn = 30 * 60 * 1000;
         const newExpires = new Date( Date.now() + expiresIn );
 
         // Create or update session in the database
@@ -117,26 +122,6 @@ export const {
       },
     } ),
   ],
-  // events: {
-  //   async signIn ( { user, account } )
-  //   {
-  //     const existingUser = await prisma.user.findUnique( {
-  //       where: { email: user.email },
-  //     } );
-
-  //     if ( !existingUser )
-  //     {
-  //       await prisma.user.create( {
-  //         data: {
-  //           name: user.name,
-  //           email: user.email,
-  //           role: "USER",
-  //           image: user.image,
-  //         },
-  //       } );
-  //     }
-  //   },
-  // },
   callbacks: {
     async jwt ( { token, user, account } )
     {
@@ -158,26 +143,24 @@ export const {
         };
       }
 
-      // Return previous token if not expired
-      if ( Date.now() < token.accessTokenExpires )
+      if ( Date.now() > token.accessTokenExpires )
       {
-        return token;
+        const refreshedToken = await refreshAccessToken( token );
+    
+        // If refresh failed, clear session
+        console.log( 'Refreshed Token:', refreshedToken );  
+        if ( refreshedToken?.error )
+        {
+          await prisma.token.deleteMany( {
+            where: { userId: parseInt( token.user.id ) }
+          } );
+          return { ...token, error: "SessionExpired" };
+        }
+    
+        return refreshedToken;
       }
 
-      // console.log('JWT Token User Role:', token.user?.role);
-      // Attempt refresh
-      const refreshedToken = await refreshAccessToken( token );
-    
-      // If refresh failed, clear session
-      if ( refreshedToken?.error )
-      {
-        await prisma.token.deleteMany( {
-          where: { userId: parseInt( token.user.id ) }
-        } );
-        return { ...token, error: "SessionExpired" };
-      }
-    
-      return refreshedToken;
+      return token;
     },
 
     async session ( { session, token } )
@@ -191,7 +174,7 @@ export const {
       session.refreshToken = token.refreshToken;
       session.error = token.error;
 
-      console.log( 'Session Token User Role:', token.user?.role );
+      // console.log( 'Session Token :', token );
       return session;
     },
   },

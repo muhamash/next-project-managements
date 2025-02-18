@@ -28,7 +28,7 @@ export async function GET(request) {
         name: true,
         email: true,
         createdAt: true || false,
-        sessions: {
+        tokens: {
           orderBy: {
             createdAt: "desc",
           },
@@ -90,7 +90,7 @@ export async function GET(request) {
     } );
 
     // Last login time (from the latest session)
-    const lastLogin = user.sessions.length > 0 ? user.sessions[0].createdAt : null;
+    const lastLogin = user?.tokens.length > 0 ? user.tokens[0].createdAt : user.tokens;
 
     // Return the response with user details and activity summary
     return NextResponse.json(
