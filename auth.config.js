@@ -3,5 +3,15 @@ export const authConfig = {
       strategy: 'jwt',
       maxAge: 30 * 60,
     },
-    providers: [],
- }
+  providers: [],
+  jwt: {
+    secret: process.env.AUTH_SECRET,
+  },
+  callbacks: {
+    async session ( session ) 
+    {
+      // console.log( "session auth config", session );
+      return session;
+    },
+  },
+}
